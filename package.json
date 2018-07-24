@@ -1,0 +1,22 @@
+{
+  "name": "hangmannode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gui365/HangmanNode.git"
+  },
+  "author": "Guillermo Barila",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gui365/HangmanNode/issues"
+  },
+  "homepage": "https://github.com/gui365/HangmanNode#readme",
+  "dependencies": {
+    "inquirer": "^6.0.0"
+  }
+}
