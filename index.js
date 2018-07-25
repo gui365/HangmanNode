@@ -3,6 +3,8 @@ var inquirer = require("inquirer");
 var Word = require("./word");
 
 // Global variables
+var acceptedInput = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var guessesLeft = 10;
 var arrayWords = ['GOALKEEPER', 'FORWARD', 'CHAMPION', 'GOAL', 'REFEREE', 'EXTRA TIME',
 'MATCH BALL', 'FAIR PLAY', 'OFFSIDE', 'SIDELINE', 'SUBSTITUTION', 'INJURY', 'FREE KICK',
@@ -12,7 +14,39 @@ var arrayWords = ['GOALKEEPER', 'FORWARD', 'CHAMPION', 'GOAL', 'REFEREE', 'EXTRA
 var secretWord;
 var pickedLetters = [];
 
+function printLogo() {
+console.log(`                                               ##
+                                             ####
+                                 @@@@@@@@&    ##
+                                         @@@@@@
+                                        @@@@@@ @
+                                 @     @@@@@    @
+                                  @   @@@@@      @
+                                  @ @@@@@@
+                                   @  %@@
+                                     @@
+                                   @&
+                                  @    @@@
+    @@&&&@@      @@&&&@@      @@&&&&@\\\  @   %@@&&&@\\\  @&&&&&&&@ @@&&&&&&@@
+  @@@@@@@@@@@  @@@@@@@@@@@  @@@@@@@@@@@   @@@@@@@@@&@ @@@@@@@@@ @@@@@@@@@@@@
+ @@@@@    @@/  @@@@   @@@@  @@@@%  @@@@@ @@@@@  %@@@@ @@@@      @@@@@   @@@@
+  @@@@@@@      @@@@   @@@@  @@@@%        @@@@@        @@@@      @@@@@  @@@@@
+   @@@@@@@@@   @@@@   @@@@  @@@@%        @@@@@        @@@@@@@@  @@@@@@@@@@@
+        @@@@@  @@@@   @@@@  @@@@%  @&@@@ @@@@@  %&&@@ @@@@      @@@@@  @@@@@
+  @@@@  @@@@@  @@@@@@@@@@@  @@@@@  @@@@@ @@@@@  @@@@@ @@@@      @@@@@   @@@@
+   @@@@@@@@@    @@@@@@@@@    &@@@@@@@@@   &@@@@@@@@@  @@@@@@@@@ @@@@@   @@@@
+                                                                         \\\@@@
+  @@    @@    .&&.    @&\\\    &@   /@@@@|   @@%    .@@    .&&.    @&\\\    &@
+  @@    @@    /@@\\\    @@@\\\   @@  @     &@  @@@@  /@@@    /@@\\\    @@@\\\   @@
+  @@    @@    @)(@    @@ @\\\  @@  @         @@  @/@ @@    @)(@    @@ @\\\  @@
+  @@@@@@@@   &&  @&   @@  @\\\ @@  @   @@@@  @@  *%  @@   &&  @&   @@  @\\\ @@
+  @@    @@   @@@@@@   @@   @\\\@@  @     @/  @@      @@   @@@@@@   @@   @\\\@@
+  @@    @@  &@    @#  @@    @@@   @@@@@@   @@      @@  &@    @#  @@    @@@`);
+}
+
 function pickRandomWord() {
+  
+  
   secretWord = new Word(arrayWords[Math.floor(Math.random() * arrayWords.length)]);
 };
 
@@ -36,6 +70,9 @@ function promptUser() {
     } else if (responseUpper.length > 1) {
       console.log(`Please enter only one letter at a time`);
       promptUser();
+    } else if (acceptedInput.indexOf(responseUpper) === -1) {
+      console.log(`Please enter a valid character`);
+      promptUser();
     } else if (pickedLetters.indexOf(responseUpper) !== -1) {
       console.log(`You've already picked that letter. Try another one`);
       promptUser();
@@ -54,7 +91,7 @@ function promptUser() {
       if (guessedCorrectly) {
         // Check for a win
         if (!secretWord.returnString().includes("_")) {
-          console.log("\x1b[42m", `You win!!! The secret word was ${secretWord.wordOriginal}`);
+          console.log("\x1b[32m", `You win!!! The secret word was ${secretWord.wordOriginal}`);
           restartGame();
           return;
         } else {
@@ -69,7 +106,7 @@ function promptUser() {
       
         // Check for a loss
         if (guessesLeft === 0) {
-          console.log("\x1b[41m", `You lost! The secret word was ${secretWord.wordOriginal}`);
+          console.log("\x1b[91m", `You lost! The secret word was ${secretWord.wordOriginal}`);
           restartGame();
           return;
         }
@@ -90,6 +127,7 @@ function restartGame() {
   }, 3000);
 }
 
+printLogo();
 pickRandomWord();
 promptUser();
 
