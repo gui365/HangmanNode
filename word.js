@@ -2,6 +2,7 @@
 var Letter = require ("./letter");
 
 function Word(newWord) {
+  this.wordOriginal = newWord;
   this.word = newWord.split("");
   this.wordObjects = [];
   for (let i = 0; i < this.word.length; i++) {
@@ -32,8 +33,9 @@ Word.prototype.returnString = function() {
 Word.prototype.guess = function(char) {
   // call Letter.updateBoolean for each letter of the word
   for (let i = 0; i < this.wordObjects.length; i++) {
-    this.wordObjects[i].updateBoolean(char.toUpperCase());
-    // console.log(this.wordObjects[i].guessed);
+    if (this.wordObjects[i] !== " ") {
+      this.wordObjects[i].updateBoolean(char.toUpperCase());
+    };
   };
 }
 

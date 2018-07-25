@@ -9,45 +9,88 @@ var arrayWords = ['GOALKEEPER', 'FORWARD', 'CHAMPION', 'GOAL', 'REFEREE', 'EXTRA
 'PENALTY KICK', 'CORNER FLAG', 'MIDFIELDER', 'WORLD CUP', 'RED CARD', 'YELLOW CARD', 'FINAL',
 'WINGER', 'TROPHY', 'SHINGUARDS', 'CLEATS', 'TOURNAMENT', 'GLORY', 'STOPPER', 'STRIKER',
 'STADIUM', 'GROUP STAGE', 'SWEEPER', 'FULL BACK', 'CENTRE BACK', 'JERSEY', 'WHISTLE'];
-var secretWord = new Word(arrayWords[Math.floor(Math.random() * arrayWords.length)]);
+var secretWord;
+var pickedLetters = [];
+
+function pickRandomWord() {
+  secretWord = new Word(arrayWords[Math.floor(Math.random() * arrayWords.length)]);
+};
 
 // Prompt the user to guess a letter
 function promptUser() {
-  console.log(secretWord.returnString());
+  console.log('\x1b[33m%s\x1b[0m',`
+  ${secretWord.returnString()}`);
   inquirer.prompt([
     {
       type: "input",
-      message: "Guess a letter",
+      message: `
+  Pick a letter`,
       name: "character"
     }
   ]).then(function(response) {
     var responseUpper = response.character.toUpperCase();
-    var guessedCorrectly = false;
 
-    secretWord.guess(responseUpper);
-    
-    for (let i = 0; i < secretWord.wordObjects.length; i++) {
-      console.log(secretWord.wordObjects[i].guessed);
-      
-      if (secretWord.wordObjects[i].character === responseUpper) {
-        guessedCorrectly = true;
-      };
-    };
-
-    if (guessedCorrectly) {
-      console.log(`You got that one right! Keep going
-      `);
+    if (responseUpper.length < 1) {
+      console.log(`Please enter a letter`);
+      promptUser();
+    } else if (responseUpper.length > 1) {
+      console.log(`Please enter only one letter at a time`);
+      promptUser();
+    } else if (pickedLetters.indexOf(responseUpper) !== -1) {
+      console.log(`You've already picked that letter. Try another one`);
+      promptUser();
     } else {
-      guessesLeft --;
-      console.log(`Not in the word. You've got ${guessesLeft} guesses left
-    `);
-    }
-    
-    guessedCorrectly = false;
-    promptUser();
+      var guessedCorrectly = false;
+
+      pickedLetters.push(responseUpper);
+      secretWord.guess(responseUpper);
+      
+      for (let i = 0; i < secretWord.wordObjects.length; i++) {
+        if (secretWord.wordObjects[i].character === responseUpper) {
+          guessedCorrectly = true;
+        };
+      };
+
+      if (guessedCorrectly) {
+        // Check for a win
+        if (!secretWord.returnString().includes("_")) {
+          console.log("\x1b[42m", `You win!!! The secret word was ${secretWord.wordOriginal}`);
+          restartGame();
+          return;
+        } else {
+          console.log(`You got that one right! Keep going
+          `);
+        }
+
+      } else {
+        guessesLeft --;
+        console.log(`Not in the word. You've got ${guessesLeft} guesses left
+      `);
+      
+        // Check for a loss
+        if (guessesLeft === 0) {
+          console.log("\x1b[41m", `You lost! The secret word was ${secretWord.wordOriginal}`);
+          restartGame();
+          return;
+        }
+      };
+      
+      guessedCorrectly = false;
+      promptUser();
+    };
   });  
 };
 
+function restartGame() {
+  setTimeout(() => {
+    pickRandomWord();
+    promptUser();
+    guessesLeft = 10;
+    pickedLetters.length = 0;
+  }, 3000);
+}
+
+pickRandomWord();
 promptUser();
 
 // console.log('\x1b[33m%s\x1b[0m', "Yellow");
