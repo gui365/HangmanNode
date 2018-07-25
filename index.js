@@ -3,6 +3,8 @@ var inquirer = require("inquirer");
 var Word = require("./word");
 
 // Global variables
+var userWins = 0;
+var userLoss = 0;
 var acceptedInput = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 var guessesLeft = 10;
@@ -46,8 +48,6 @@ console.log("\u001b[36m",`   @@&&&@@      @@&&&@@      @@&&&&@\\\      %@@&&&@\\
 }
 
 function pickRandomWord() {
-  
-  
   secretWord = new Word(arrayWords[Math.floor(Math.random() * arrayWords.length)]);
 };
 
@@ -93,6 +93,7 @@ function promptUser() {
         // Check for a win
         if (!secretWord.returnString().includes("_")) {
           console.log("\x1b[32m", `You win!!! The secret word was ${secretWord.wordOriginal}`);
+          userWins++;
           restartGame();
           return;
         } else {
@@ -108,6 +109,7 @@ function promptUser() {
         // Check for a loss
         if (guessesLeft === 0) {
           console.log("\x1b[91m", `You lost! The secret word was ${secretWord.wordOriginal}`);
+          userLoss++;
           restartGame();
           return;
         }
@@ -121,6 +123,11 @@ function promptUser() {
 
 function restartGame() {
   setTimeout(() => {
+    console.log(`
+  ╔══════════════════════════════════╗
+  ║ SCOREBOARD ->  Won: ${userWins} / Lost: ${userLoss}  ║
+  ╚══════════════════════════════════╝`);
+    
     pickRandomWord();
     promptUser();
     guessesLeft = 10;
