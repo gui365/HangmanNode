@@ -53,8 +53,9 @@ function pickRandomWord() {
 
 // Prompt the user to guess a letter
 function promptUser() {
-  console.log('\x1b[33m%s\x1b[0m',`
-  ${secretWord.returnString()}`);
+  console.log(`\x1b[37;40m
+  ${secretWord.returnString()}
+  `);
   inquirer.prompt([
     {
       type: "input",
@@ -66,16 +67,16 @@ function promptUser() {
     var responseUpper = response.character.toUpperCase();
 
     if (responseUpper.length < 1) {
-      console.log(`Please enter a letter`);
+      console.log(`\x1b[31;40m ►> \x1b[37;40mPlease enter a letter \x1b[31;40m<◄ `);
       promptUser();
     } else if (responseUpper.length > 1) {
-      console.log(`Please enter only one letter at a time`);
+      console.log(`\x1b[31;40m ►> \x1b[37;40mPlease enter only one letter at a time \x1b[31;40m<◄ `);
       promptUser();
     } else if (acceptedInput.indexOf(responseUpper) === -1) {
-      console.log(`Please enter a valid character`);
+      console.log(`\x1b[31;40m ►> \x1b[37;40mPlease enter a valid character \x1b[31;40m<◄ `);
       promptUser();
     } else if (pickedLetters.indexOf(responseUpper) !== -1) {
-      console.log(`You've already picked that letter. Try another one`);
+      console.log(`\x1b[31;40m ►> \x1b[37;40mYou've already picked that letter. Try another one \x1b[31;40m<◄ `);
       promptUser();
     } else {
       var guessedCorrectly = false;
@@ -92,7 +93,7 @@ function promptUser() {
       if (guessedCorrectly) {
         // Check for a win
         if (!secretWord.returnString().includes("_")) {
-          console.log("\x1b[32m", `You win!!! The secret word was ${secretWord.wordOriginal}`);
+          console.log("\x1b[30;42m", `You win!!! The secret word was ${secretWord.wordOriginal} `);
           userWins++;
           restartGame();
           return;
@@ -108,7 +109,7 @@ function promptUser() {
       
         // Check for a loss
         if (guessesLeft === 0) {
-          console.log("\x1b[91m", `You lost! The secret word was ${secretWord.wordOriginal}`);
+          console.log("\x1b[97;41m", `You lost! The secret word was ${secretWord.wordOriginal} `);
           userLoss++;
           restartGame();
           return;
@@ -123,11 +124,10 @@ function promptUser() {
 
 function restartGame() {
   setTimeout(() => {
-    console.log(`
+    console.log(`\x1b[33;40m
   ╔══════════════════════════════════╗
   ║ SCOREBOARD ->  Won: ${userWins} / Lost: ${userLoss}  ║
   ╚══════════════════════════════════╝`);
-    
     pickRandomWord();
     promptUser();
     guessesLeft = 10;
